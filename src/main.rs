@@ -43,6 +43,16 @@ fn test_closest_smaller() {
     assert_eq!(expected,res);
 }
 
+#[test]
+fn test_allowed_result_list() {
+    let result=vec![3,4,12,60];
+    let allowed=vec![32,4,5,33,45,60];
+    let expected=vec![4,60];
+    let res= allowed_result_list(result, allowed);
+    println!("{:#?}",res);
+    assert_eq!(expected,res);
+}
+
 //func to get the available closest not smaller value to each value in prefered list
 fn closest_not_smaller(p_num:usize,available:Vec<usize>)->usize{
     for e in available.iter() { 
@@ -67,3 +77,13 @@ fn closest_smaller(p_num:usize,available:Vec<usize>)->usize{
 
 }
 
+// func that return a list of allowed values
+fn allowed_result_list(result:Vec<usize>,allowed:Vec<usize>)->Vec<usize>{
+    let mut confirmed_res=vec![];
+    for res in result.iter(){
+        if allowed.contains(res){
+            confirmed_res.push(*res)
+        }
+    }
+    confirmed_res
+}
