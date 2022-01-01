@@ -229,6 +229,30 @@ mod tests{
     }
     //speacial value tests ===>
     #[test]
+    fn test_special_attempt_1(){
+        let available=vec![240,360,720];
+        let allowed=vec![360,any];
+        let preferred = vec![360,720];
+        let result=attempt(available, preferred, allowed);
+        let expected:Vec<usize>= vec![360,720];
+        println!("result {:#?}",result);
+        assert_eq!(expected,result);
+
+    }
+    #[test]
+    fn test_special_attempt_2(){
+        let available=vec![240,360,720];
+        let allowed=vec![240,360,720];
+        let preferred = vec![any,720];
+        let result=attempt(available, preferred, allowed);
+        let expected:Vec<usize>= vec![240,360,720];
+        println!("result {:#?}",result);
+        assert_eq!(expected,result);
+
+    }
+    
+
+    #[test]
     fn test_special_attempt_3(){
         let available=vec![240,360,720];
         let allowed=vec![360,1080];
