@@ -1,3 +1,4 @@
+const ANY:usize=00000;
 /* func to get common values in available and prefered lists */
 fn available_prefered(available:Vec<usize>,preferred:Vec<usize>)->Vec<usize>{
 let mut res :Vec<usize>=vec![];
@@ -74,6 +75,10 @@ None
 // func that return a list of allowed values
 fn allowed_result_list(result:Vec<usize>,allowed:Vec<usize>)->Vec<usize>{
     let mut confirmed_res=vec![];
+    if allowed.contains(&ANY){
+         confirmed_res=result;
+         return confirmed_res;
+    }
     for res in result.iter(){
         if allowed.contains(res){
             confirmed_res.push(*res)
@@ -120,10 +125,17 @@ mod tests{
     fn test_allowed_result_list() {
         let result=vec![3,4,12,60];
         let allowed=vec![32,4,5,33,45,60];
+        let allowed_with_any=vec![32,4,5,33,45,60,ANY];
+        let expected_with_any=vec![3,4,12,60];
         let expected=vec![4,60];
-        let res= allowed_result_list(result, allowed);
-        //println!("{:#?}",res);
+
+        let res= allowed_result_list(result.to_owned(), allowed);
+        println!("{:#?}",res);
         assert_eq!(expected,res);
+        let res_with_any= allowed_result_list(result, allowed_with_any);
+        println!("{:#?}",res_with_any);
+
+        assert_eq!(expected_with_any,res_with_any);
     }
 
     #[test]
