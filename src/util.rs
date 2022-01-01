@@ -56,7 +56,7 @@ pub fn allowed_result_list(result:Vec<usize>,allowed:Vec<usize>)->Vec<usize>{
     
 /* func to get common values in available and prefered lists */
 
-/*
+
 pub fn available_prefered(available:Vec<usize>,preferred:Vec<usize>)->Vec<usize>{
     let mut res :Vec<usize>=vec![];
     for p in preferred{
@@ -66,4 +66,4 @@ pub fn available_prefered(available:Vec<usize>,preferred:Vec<usize>)->Vec<usize>
     }
     res
     }
- */
+ 
