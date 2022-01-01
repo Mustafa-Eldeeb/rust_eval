@@ -1,4 +1,5 @@
 const ANY:usize=00000;
+const any:usize=ANY;
 /* func to get common values in available and prefered lists */
 fn available_prefered(available:Vec<usize>,preferred:Vec<usize>)->Vec<usize>{
 let mut res :Vec<usize>=vec![];
@@ -13,6 +14,9 @@ pub fn attempt(available:Vec<usize>,preferred:Vec<usize>,allowed:Vec<usize>)->Ve
     let mut res :Vec<usize>=vec![];
     let mut available=available;
     available.sort();
+    if preferred.contains(&any){
+        return allowed_result_list(available, allowed)
+    }
     for p in preferred.iter(){
         if available.contains(p){
             res.push(*p)
@@ -75,7 +79,7 @@ None
 // func that return a list of allowed values
 fn allowed_result_list(result:Vec<usize>,allowed:Vec<usize>)->Vec<usize>{
     let mut confirmed_res=vec![];
-    if allowed.contains(&ANY){
+    if allowed.contains(&any){
          confirmed_res=result;
          return confirmed_res;
     }
@@ -223,6 +227,28 @@ mod tests{
         assert_eq!(expected,result);
 
     }
-    
-   
+    //speacial value tests ===>
+    #[test]
+    fn test_special_attempt_3(){
+        let available=vec![240,360,720];
+        let allowed=vec![360,1080];
+        let preferred = vec![any,720];
+        let result=attempt(available, preferred, allowed);
+        let expected= vec![360];
+        println!("result {:#?}",result);
+        assert_eq!(expected,result);
+
+    }
+
+    #[test]
+    fn test_special_attempt_4(){
+        let available=vec![240,360,720];
+        let allowed=vec![1080];
+        let preferred = vec![any,720];
+        let result=attempt(available, preferred, allowed);
+        let expected:Vec<usize>= vec![];
+        println!("result {:#?}",result);
+        assert_eq!(expected,result);
+
+    }
 }
