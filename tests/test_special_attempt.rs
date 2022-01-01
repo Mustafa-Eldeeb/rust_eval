@@ -1,3 +1,4 @@
+/* add test special attempt to test behaviour when list have 'any' */
 #[cfg(test)]
 mod tests{
     use rust_eval::attempt::*;
