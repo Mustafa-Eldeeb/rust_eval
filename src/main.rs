@@ -1,18 +1,75 @@
-const ANY:usize=00000;
-const any:usize=ANY;
-/* func to get common values in available and prefered lists */
-fn available_prefered(available:Vec<usize>,preferred:Vec<usize>)->Vec<usize>{
-let mut res :Vec<usize>=vec![];
-for p in preferred{
-    if available.contains(&p){
-        res.push(p)
+mod util;
+//use util::*;
+
+pub enum Any{
+    Any
+}
+
+impl Any {
+    pub fn into_usize(self)->usize{   
+        match self{
+           Self::Any =>00000   
+        }
     }
 }
-res
+
+//func to get the available closest not smaller value to each value in prefered list
+pub fn closest_not_smaller(p_num:usize,available:&Vec<usize>)->Option<usize>{
+    for e in available.iter() { 
+        if e>&p_num
+        {
+            return Some(*e);
+        }
+    }
+None
+
 }
+//func to get the available closest smaller value to each value in prefered list
+pub fn closest_smaller(p_num:usize,available:&Vec<usize>)->Option<usize>{
+
+    for e in available.iter().rev() { 
+        if e <&p_num 
+        {
+            return Some(*e);
+        }
+    }
+None
+
+}
+
+// func that return a list of allowed values
+pub fn allowed_result_list(result:Vec<usize>,allowed:Vec<usize>)->Vec<usize>{
+    let mut confirmed_res=vec![];
+    let any:usize=Any::Any.into_usize();
+    if allowed.contains(&any){
+         confirmed_res=result;
+         return confirmed_res;
+    }
+    for res in result.iter(){
+        if allowed.contains(res){
+            confirmed_res.push(*res)
+        }
+    }
+    confirmed_res.dedup();
+    confirmed_res
+
+}
+
+pub fn available_prefered(available:Vec<usize>,preferred:Vec<usize>)->Vec<usize>{
+    let mut res :Vec<usize>=vec![];
+    for p in preferred{
+        if available.contains(&p){
+            res.push(p)
+        }
+    }
+    res
+    }
+    
+/* func to get common values in available and prefered lists */
 pub fn attempt(available:Vec<usize>,preferred:Vec<usize>,allowed:Vec<usize>)->Vec<usize>{
     let mut res :Vec<usize>=vec![];
     let mut available=available;
+    let any:usize=Any::Any.into_usize();
     available.sort();
     if preferred.contains(&any){
         return allowed_result_list(available, allowed)
@@ -52,95 +109,12 @@ fn main() {
   println!("result {:#?}",result);
 }
 
-//func to get the available closest not smaller value to each value in prefered list
-fn closest_not_smaller(p_num:usize,available:&Vec<usize>)->Option<usize>{
-    for e in available.iter() { 
-        if e>&p_num
-        {
-            return Some(*e);
-        }
-    }
-None
 
-}
-//func to get the available closest smaller value to each value in prefered list
-fn closest_smaller(p_num:usize,available:&Vec<usize>)->Option<usize>{
-
-    for e in available.iter().rev() { 
-        if e <&p_num 
-        {
-            return Some(*e);
-        }
-    }
-None
-
-}
-
-// func that return a list of allowed values
-fn allowed_result_list(result:Vec<usize>,allowed:Vec<usize>)->Vec<usize>{
-    let mut confirmed_res=vec![];
-    if allowed.contains(&any){
-         confirmed_res=result;
-         return confirmed_res;
-    }
-    for res in result.iter(){
-        if allowed.contains(res){
-            confirmed_res.push(*res)
-        }
-    }
-    confirmed_res.dedup();
-    confirmed_res
-
-}
 #[cfg(test)]
 mod tests{
     use super::*;
 
-    #[test]
-    fn test_available_prefered(){
-    let prefered = vec![1,45,1240];
-        let available=vec![3,54,45,12,1];
-        let expected=vec![1,45];
-        let res=available_prefered(available, prefered);
-       //println!("{:#?}",res);
-        assert_eq!(expected,res);
-
-    }
-    #[test]
-    fn test_closest_not_smaller() {
-        let available=vec![3,4,5,12,45,60];
-        let num=4;
-        let expected=5;
-        let res= closest_not_smaller(num, &available).unwrap();
-        //println!("{:#?}",res);
-        assert_eq!(expected,res);
-    }
-    #[test]
-    fn test_closest_smaller() {
-        let available=vec![3,4,5,12,45,60];
-        let num=12;
-        let expected=5;
-        let res= closest_smaller(num, &available).unwrap();
-        //println!("{:#?}",res);
-        assert_eq!(expected,res);
-    }
-
-    #[test]
-    fn test_allowed_result_list() {
-        let result=vec![3,4,12,60];
-        let allowed=vec![32,4,5,33,45,60];
-        let allowed_with_any=vec![32,4,5,33,45,60,ANY];
-        let expected_with_any=vec![3,4,12,60];
-        let expected=vec![4,60];
-
-        let res= allowed_result_list(result.to_owned(), allowed);
-        println!("{:#?}",res);
-        assert_eq!(expected,res);
-        let res_with_any= allowed_result_list(result, allowed_with_any);
-        println!("{:#?}",res_with_any);
-
-        assert_eq!(expected_with_any,res_with_any);
-    }
+   
 
     #[test]
     fn test_attempt_1(){
@@ -230,6 +204,7 @@ mod tests{
     //speacial value tests ===>
     #[test]
     fn test_special_attempt_1(){
+        let any:usize=Any::Any.into_usize();
         let available=vec![240,360,720];
         let allowed=vec![360,any];
         let preferred = vec![360,720];
@@ -241,6 +216,7 @@ mod tests{
     }
     #[test]
     fn test_special_attempt_2(){
+        let any:usize=Any::Any.into_usize();
         let available=vec![240,360,720];
         let allowed=vec![240,360,720];
         let preferred = vec![any,720];
@@ -254,6 +230,7 @@ mod tests{
 
     #[test]
     fn test_special_attempt_3(){
+        let any:usize=Any::Any.into_usize();
         let available=vec![240,360,720];
         let allowed=vec![360,1080];
         let preferred = vec![any,720];
@@ -266,6 +243,7 @@ mod tests{
 
     #[test]
     fn test_special_attempt_4(){
+        let any:usize=Any::Any.into_usize();
         let available=vec![240,360,720];
         let allowed=vec![1080];
         let preferred = vec![any,720];
@@ -275,4 +253,58 @@ mod tests{
         assert_eq!(expected,result);
 
     }
+}
+
+
+#[cfg(test)]
+mod util_tests{
+    use super::*;
+
+    #[test]
+    fn test_available_prefered(){
+    let prefered = vec![1,45,1240];
+        let available=vec![3,54,45,12,1];
+        let expected=vec![1,45];
+        let res=available_prefered(available, prefered);
+       //println!("{:#?}",res);
+        assert_eq!(expected,res);
+
+    }
+    #[test]
+    fn test_closest_not_smaller() {
+        let available=vec![3,4,5,12,45,60];
+        let num=4;
+        let expected=5;
+        let res= closest_not_smaller(num, &available).unwrap();
+        //println!("{:#?}",res);
+        assert_eq!(expected,res);
+    }
+    #[test]
+    fn test_closest_smaller() {
+        let available=vec![3,4,5,12,45,60];
+        let num=12;
+        let expected=5;
+        let res= closest_smaller(num, &available).unwrap();
+        //println!("{:#?}",res);
+        assert_eq!(expected,res);
+    }
+
+    #[test]
+    fn test_allowed_result_list() {
+        let any:usize=Any::Any.into_usize();
+        let result=vec![3,4,12,60];
+        let allowed=vec![32,4,5,33,45,60];
+        let allowed_with_any=vec![32,4,5,33,45,60,any];
+        let expected_with_any=vec![3,4,12,60];
+        let expected=vec![4,60];
+
+        let res= allowed_result_list(result.to_owned(), allowed);
+        println!("{:#?}",res);
+        assert_eq!(expected,res);
+        let res_with_any= allowed_result_list(result, allowed_with_any);
+        println!("{:#?}",res_with_any);
+
+        assert_eq!(expected_with_any,res_with_any);
+    }
+
 }
